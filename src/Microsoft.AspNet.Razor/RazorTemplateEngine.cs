@@ -184,7 +184,7 @@ namespace Microsoft.AspNet.Razor
 #endif
             }
 
-            var builder = new CSharpCodeBuilder(generator.Context);
+            var builder = new CustomCSharpCodeBuilder(generator.Context);
             CodeBuilderResult builderResult = builder.Build();
 
             // Collect results and return

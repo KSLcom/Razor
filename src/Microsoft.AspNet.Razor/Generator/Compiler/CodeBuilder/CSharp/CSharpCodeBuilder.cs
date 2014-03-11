@@ -44,13 +44,9 @@ namespace Microsoft.AspNet.Razor.Generator.Compiler.CSharp
                     new CSharpTypeMemberVisitor(writer, Context).Accept(Tree.Chunks);
                     new CSharpDesignTimeHelpersVisitor(writer, Context).AcceptTree(Tree);
                   
-                    writer.WriteLineHiddenDirective();
-                    using (writer.BuildConstructor(Context.ClassName))
-                    {
-                        // Any constructor based logic that we need to add?
-                    };
+                    BuildConstructor(writer);
 
-                    // Add space inbetween constructor and method body
+                    // Add space in-between constructor and method body
                     writer.WriteLine();
 
                     using (writer.BuildMethodDeclaration("public override", "void", Host.GeneratedClassContext.ExecuteMethodName))
@@ -61,6 +57,14 @@ namespace Microsoft.AspNet.Razor.Generator.Compiler.CSharp
             }
 
             return new CodeBuilderResult(writer.ToString(), writer.LineMappingManager.Mappings);
+        }
+
+        protected virtual void BuildConstructor(CSharpCodeWriter writer)
+        {
+            writer.WriteLineHiddenDirective();
+            using (writer.BuildConstructor(Context.ClassName))
+            {
+            };
         }
 
         private void AddImports(CodeTree codeTree, CSharpCodeWriter writer, IEnumerable<string> defaultImports)

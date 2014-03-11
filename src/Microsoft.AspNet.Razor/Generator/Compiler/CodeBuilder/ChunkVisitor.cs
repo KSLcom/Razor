@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNet.Razor.Generator.Compiler.Custom;
 
 namespace Microsoft.AspNet.Razor.Generator.Compiler
 {
@@ -37,6 +38,10 @@ namespace Microsoft.AspNet.Razor.Generator.Compiler
             if (chunk is LiteralChunk)
             {
                 Visit((LiteralChunk)chunk);
+            }
+            else if(chunk is InjectChunk)
+            {
+                Visit((InjectChunk)chunk);
             }
             else if (chunk is ExpressionBlockChunk)
             {
@@ -108,6 +113,7 @@ namespace Microsoft.AspNet.Razor.Generator.Compiler
             }
         }
 
+        protected abstract void Visit(InjectChunk chunk);
         protected abstract void Visit(LiteralChunk chunk);
         protected abstract void Visit(ExpressionChunk chunk);
         protected abstract void Visit(StatementChunk chunk);

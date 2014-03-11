@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using Microsoft.AspNet.Razor.Editor;
 using Microsoft.AspNet.Razor.Generator;
+using Microsoft.AspNet.Razor.Generator.Compiler.Custom;
 using Microsoft.AspNet.Razor.Parser.SyntaxTree;
 using Microsoft.AspNet.Razor.Text;
 using Microsoft.AspNet.Razor.Tokenizer.Symbols;
@@ -24,6 +25,26 @@ namespace Microsoft.AspNet.Razor.Parser
             MapDirectives(HelperDirective, SyntaxConstants.CSharp.HelperKeyword);
             MapDirectives(LayoutDirective, SyntaxConstants.CSharp.LayoutKeyword);
             MapDirectives(SessionStateDirective, SyntaxConstants.CSharp.SessionStateKeyword);
+
+            MapDirectives(InjectDirective, "inject");
+        }
+
+        protected virtual void InjectDirective()
+        {
+            AcceptAndMoveNext();
+
+            Context.CurrentBlock.Type = BlockType.Directive;
+
+            // Accept spaces, but not newlines
+            bool foundSomeWhitespace = At(CSharpSymbolType.WhiteSpace);
+            
+            AcceptWhile(CSharpSymbolType.WhiteSpace);
+
+            Output(SpanKind.MetaCode, foundSomeWhitespace ? AcceptedCharacters.None : AcceptedCharacters.Any);
+
+            // First non-whitespace character starts the Layout Page, then newline ends it
+            AcceptUntil(CSharpSymbolType.NewLine);
+            Span.CodeGenerator = new InjectCodeGenerator();
         }
 
         protected virtual void LayoutDirective()

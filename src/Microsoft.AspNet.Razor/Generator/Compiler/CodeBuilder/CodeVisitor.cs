@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNet.Razor.Generator.Compiler.Custom;
 namespace Microsoft.AspNet.Razor.Generator.Compiler
 {
     public class CodeVisitor<T> : ChunkVisitor<T> where T : CodeWriter
@@ -6,6 +7,9 @@ namespace Microsoft.AspNet.Razor.Generator.Compiler
         public CodeVisitor(T writer, CodeGeneratorContext context)
             : base(writer, context) { }
 
+        protected override void Visit(InjectChunk chunk)
+        {
+        }
         protected override void Visit(LiteralChunk chunk)
         {
         }
